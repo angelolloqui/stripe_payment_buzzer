@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/stripe_bell.iml" filepath="$PROJECT_DIR$/.idea/modules/stripe_bell.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/stripe_bell_main.iml" filepath="$PROJECT_DIR$/.idea/modules/stripe_bell_main.iml" group="stripe_bell" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/stripe_bell_test.iml" filepath="$PROJECT_DIR$/.idea/modules/stripe_bell_test.iml" group="stripe_bell" />
+    </modules>
+  </component>
+</project>
