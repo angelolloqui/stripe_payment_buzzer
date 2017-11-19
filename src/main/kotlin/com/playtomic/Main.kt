@@ -20,6 +20,7 @@ fun main(args : Array<String>) {
 
     var lastCharge = Charge.list(mapOf("limit" to 1)).data.first()
     println("Last charge: ${lastCharge.id} \n\tmade on ${lastCharge.formattedDate()}")
+    alarm.play()
 
     while (true) {
         Thread.sleep(60000)
