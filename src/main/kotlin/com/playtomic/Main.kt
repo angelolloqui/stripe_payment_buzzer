@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import javax.sound.sampled.AudioSystem
 
 
-fun main(args : Array<String>) {
+fun main(args: Array<String>) {
     if (args.isEmpty()) {
         println("Stripe key required")
         return
@@ -21,15 +21,24 @@ fun main(args : Array<String>) {
     var lastCharge = Charge.list(mapOf("limit" to 1)).data.first()
     println("Last charge: ${lastCharge.id} \n\tmade on ${lastCharge.formattedDate()}")
     alarm.play()
+    Thread.sleep(400)
+    alarm.play()
+    Thread.sleep(400)
+    alarm.play()
+    Thread.sleep(400)
 
     while (true) {
-        Thread.sleep(60000)
-        val newCharges = Charge.list(mapOf("ending_before" to lastCharge.id))
-        for (charge in newCharges.data.reversed()) {
-            println("New charge: ${lastCharge.id} \n\tmade on ${lastCharge.formattedDate()}")
-            alarm.play()
-            Thread.sleep(2000)
-            lastCharge = charge
+        Thread.sleep(45000)
+        try {
+            val newCharges = Charge.list(mapOf("ending_before" to lastCharge.id))
+            for (charge in newCharges.data.reversed()) {
+                println("New charge: ${lastCharge.id} \n\tmade on ${lastCharge.formattedDate()}")
+                alarm.play()
+                Thread.sleep(2000)
+                lastCharge = charge
+            }
+        } catch (t: Throwable) {
+            t.printStackTrace()
         }
     }
 }
