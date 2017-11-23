@@ -4,6 +4,7 @@ import com.stripe.Stripe
 import com.stripe.model.Charge
 import java.net.URL
 import java.text.SimpleDateFormat
+import java.util.*
 import javax.sound.sampled.AudioSystem
 
 
@@ -13,31 +14,40 @@ fun main(args: Array<String>) {
         return
     }
 
-    val alarm = Buzzer(fileName = "bell_2.wav")
+    val purchaseBuzzer = Buzzer(fileName = "bell_2.wav")
+    val refundBuzzer = Buzzer(fileName = "emergency.wav")
     val stripeKey = args[0]
     println("Connecting to Stripe using key: $stripeKey")
     Stripe.apiKey = stripeKey
 
     var lastCharge = Charge.list(mapOf("limit" to 1)).data.first()
-    println("Last charge: ${lastCharge.id} \n\tmade on ${lastCharge.formattedDate()}")
-    alarm.play()
-    Thread.sleep(400)
-    alarm.play()
-    Thread.sleep(400)
-    alarm.play()
-    Thread.sleep(400)
+    println("OK [${Date()}] - Last charge: ${lastCharge.id} made on ${lastCharge.formattedDate()}")
+    purchaseBuzzer.play()
+    Thread.sleep(300)
+    purchaseBuzzer.play()
+    Thread.sleep(300)
+    purchaseBuzzer.play()
+    Thread.sleep(300)
 
     while (true) {
         Thread.sleep(45000)
         try {
             val newCharges = Charge.list(mapOf("ending_before" to lastCharge.id))
             for (charge in newCharges.data.reversed()) {
-                println("New charge: ${lastCharge.id} \n\tmade on ${lastCharge.formattedDate()}")
-                alarm.play()
-                Thread.sleep(2000)
+                if (charge.status == "succeeded") {
+                    if (charge.refunded) {
+                        println("OK [${Date()}] - Refunded charge: ${charge.id} made on ${charge.formattedDate()}")
+                        refundBuzzer.play()
+                    } else {
+                        println("OK [${Date()}] - New charge: ${charge.id} made on ${charge.formattedDate()}")
+                        purchaseBuzzer.play()
+                    }
+                    Thread.sleep(4000)
+                }
                 lastCharge = charge
             }
         } catch (t: Throwable) {
+            println("ERR [${Date()}] - Error connecting to Stripe: ${t.localizedMessage}")
             t.printStackTrace()
         }
     }
